@@ -9,6 +9,16 @@ This is a solo portfolio project that follows a group capstone on credit card ch
 - **Models** = Logistic regression, Random Forest, AdaBoost, XGBoost.
 - **Payoff** = feature importance (which tax and filing signals matter), then a test portfolio of the top-ranked stocks against the S&P 500.
 
+## Key finding: slow 10-K filers lose money
+
+The clearest result is about the **10-K filing date**: companies that file their annual report late are far more likely to be losing money, and their stocks do worse.
+
+- Companies that filed late, within the NT extension, had a pretax loss **67%** of the time, vs **30%** for companies that filed early. Very late filers (past the extension) lost money 74% of the time.
+- It is not just small companies: among the largest fifth of companies, **39%** of very late filers lost money vs **9%** of early filers.
+- Holding size, industry, year, this year's loss and ROA constant, filing past the deadline raises the odds of a loss **next year by 48%**, and goes with a stock return **9.6 points lower** vs the S&P 500 over the next 12 months.
+
+This is correlation, not cause: late filing is usually a symptom of accounting or business trouble, not its source. Details in [step 8](#step-8-slow-filers-and-red-flags-filing_delay_testpy).
+
 ## Status (15 Oct 2026)
 
 | Step | What | Status |
@@ -19,7 +29,8 @@ This is a solo portfolio project that follows a group capstone on credit card ch
 | 4 | Tax abatements (NY IDA) | Done |
 | 5 | Controls and the modeling table | Done |
 | 6 | Train the four models, feature importance | Done |
-| 7 | Portfolio test vs the S&P 500 | Next |
+| 7 | Portfolio test vs the S&P 500 | Done |
+| 8 | Do slow 10-K filers lose money? Red-flag check | Done |
 
 ## The project step by step
 
@@ -89,9 +100,47 @@ Logit, Random Forest, AdaBoost and XGBoost were trained on fiscal 2012-2020 and 
 - **The honest headline:** a controls-only model does almost as well. Only Random Forest's gain from the tax and filing signals (+0.006 AUC) is clearly above zero. Tax figures overlap with size and profitability.
 - Last year's return hurt in the test years: momentum from 2012-2020 flipped in 2021-2024.
 
-### Step 7. Portfolio test (next)
+### Step 7. Portfolio test (`portfolio_test.py`)
 
-Each test year, buy the top 10-20% of stocks the best model ranks highest and compare that portfolio to the S&P 500: return, volatility, Sharpe ratio and alpha (using the Fama-French factors from Ken French's data library).
+Each test year, rank stocks by Random Forest's probability of beating the S&P 500, hold equal-weighted portfolios for the same 12-month windows as the target, and compare them to the S&P 500 over the same days. This is a light version: no trading costs, and no Sharpe ratio or Fama-French alpha, because four years are too few. Full write-up: [results/RESULTS.md](results/RESULTS.md); chart: `results/portfolio_returns.png`.
+
+| Portfolio (avg per year, 2021-2024) | Return | S&P 500 | Excess return | Years it beat the S&P 500 |
+|---|---|---|---|---|
+| Top 10% | 6.7% | 14.6% | **-7.9%** | 0 of 4 |
+| Top 20% | 7.4% | 14.5% | -7.1% | 0 of 4 |
+| All stocks | 4.2% | 14.5% | -10.3% | 0 of 4 |
+| Bottom 10% | -15.3% | 14.7% | **-30.0%** | 0 of 4 |
+| Top 10%, controls-only model | 5.9% | 14.6% | -8.8% | 0 of 4 |
+
+- **The top picks never beat the S&P 500.** In 2021-2024 a handful of mega-caps carried the index, and the typical stock trailed it by about 10% a year.
+- **The model is much better at spotting losers than winners.** The top 10% beat the average stock by about 2.4 points a year; the bottom 10% trailed it by about 20. It works better for avoiding stocks than for picking them.
+- **Tax and filing signals add about 0.9 points a year** over the controls-only model, well within the noise.
+
+### Step 8. Slow filers and red flags (`filing_delay_test.py`)
+
+The hypothesis: the longer a company takes to file its 10-K, the more likely it is to be losing money. Delay is measured against each company's own SEC deadline (60 days after year-end for large accelerated filers, 75 for accelerated, 90 for the rest; an NT 10-K buys 15 more days). Fiscal 2012-2024, 41,024 company-years. Chart: `results/filing_delay.png`.
+
+| How the 10-K was filed | Company-years | Loss this year | Loss next year | Median return vs S&P 500 | Beat the S&P 500 |
+|---|---|---|---|---|---|
+| Early (8+ days before deadline) | 15,426 | 30.3% | 30.1% | -8.1% | 40.3% |
+| Last week before deadline | 20,635 | 31.7% | 32.4% | -10.3% | 38.6% |
+| Late, within NT extension | 3,498 | 66.6% | 67.2% | -33.3% | 27.7% |
+| Very late (past extension) | 1,465 | 74.2% | 74.5% | -35.6% | 31.0% |
+
+Regressions holding size, industry and year constant (standard errors clustered by company):
+- Each extra 10 days relative to the deadline raises the odds of a loss this year by 9%.
+- Filing past the deadline raises the odds of a loss next year by 48% (95% range 32-66%), even holding this year's loss and ROA constant. So slow filing warns of losses beyond what the latest results already show.
+- Filing past the deadline goes with a 12-month return 9.6 points lower vs the S&P 500 (95% range -13.4 to -5.9).
+
+**Red flags on their own** (`results/tax_flags_check.py`, test years 2021-2024): a Random Forest using only tax, filing and abatement features (no size, profitability or industry) reaches a test AUC of 0.574, and its bottom 10% trailed the S&P 500 by 26.9% a year. Stocks with a late 10-K trailed the S&P 500 by 22.2% a year, and those in the top 10% for valuation allowance (tax assets the company doubts it can use) by 25.9%, vs 10.3% for all stocks. Each red flag trailed the index in all four test years.
+
+Caveats: correlation, not cause. The very-late group's average return (-4.4%) is much better than its median because a few of these stocks soar. Delisted companies are mostly missing, which probably makes late filers look *better* than they really were.
+
+## Conclusion
+
+**The 10-K filing date is the strongest signal in the project.** Companies that file late are about twice as likely to be losing money, are more likely to lose money next year even after accounting for this year's results, and their stocks trail the market. This holds for large companies too. It is a correlation, not a cause: late filing is a warning sign of trouble, not the trouble itself.
+
+The broader prediction model is more modest. The models use tax signals more than any other group, and Random Forest reaches a test AUC of 0.564, but most of that signal overlaps with size and profitability, and in 2021-2024 it was not enough to build a portfolio that beat the S&P 500. Tax and filing data work best for **flagging stocks likely to do badly**, not for picking winners.
 
 ## Data sources
 
@@ -101,7 +150,7 @@ Each test year, buy the top 10-20% of stocks the best model ranks highest and co
 | SEC EDGAR filing index | NT late-filing notices, 10-K dates | Free |
 | NY State IDA projects (data.ny.gov/d/9rtk-3fkw) | Tax abatements | Free |
 | Yahoo Finance chart API | Daily prices, SPY | Free |
-| Ken French data library | Factors for alpha (step 7) | Free |
+| Ken French data library | Factors for alpha (planned; not used in the light step 7) | Free |
 | Good Jobs First Subsidy Tracker | National abatements | Paywalled, not used |
 
 ## Files
@@ -120,6 +169,10 @@ Each test year, buy the top 10-20% of stocks the best model ranks highest and co
 | `build_controls.py` | Step 5 (dividends, years filing) | `data/controls_company_year.csv` |
 | `build_modeling_table.py` | Step 5 (join + clean) | `data/modeling_table.csv` |
 | `train_models.py` | Step 6 (four models, controls-only baseline, importance, charts) | `results/`, `data/test_predictions.csv` |
+| `portfolio_test.py` | Step 7 (top/bottom portfolios vs the S&P 500) | `results/portfolio_summary.csv`, `portfolio_by_year.csv`, `portfolio_returns.png` |
+| `filing_delay_test.py` | Step 8 (filing delay vs losses and returns) | `results/filing_delay_groups.csv`, `filing_delay_regressions.csv`, `filing_delay.png` |
+| `results/tax_flags_check.py` | Step 8 one-off check: tax + filing only model, red-flag returns | prints to screen |
+| `save_models.py` | Saves the four trained models, with their blank-filling and scaling steps | `models/logit.pkl`, `rf.pkl`, `ada.pkl`, `xgb.pkl` |
 | `requirements.txt` | Python packages | |
 
 ### Data (`data/`, about 56 MB)
@@ -140,9 +193,13 @@ Each test year, buy the top 10-20% of stocks the best model ranks highest and co
 
 On GitHub the data files are gzipped (`.csv.gz`) to fit the upload limit. pandas reads them directly (`pd.read_csv("data/modeling_table.csv.gz")`); to re-run the scripts, unzip them first so the names end in `.csv`.
 
+### Trained models (`models/`)
+
+`logit.pkl`, `rf.pkl`, `ada.pkl`, `xgb.pkl`, about 5 MB in total. Load one with `joblib.load("models/rf.pkl")`; `save_models.py` shows how to prepare new rows the same way (`prepare()`). They give the same test AUC as in `results/`.
+
 ### Results (`results/`)
 
-`RESULTS.md` (summary), `model_metrics.csv`, `auc_by_test_year.csv`, `permutation_importance.csv`, `logit_coefficients.csv`, `tuning_2018_2020.csv`, `best_params.json`, and three charts: `roc_curves.png`, `feature_importance.png`, `importance_by_group.png`.
+`RESULTS.md` (summary), `model_metrics.csv`, `auc_by_test_year.csv`, `permutation_importance.csv`, `logit_coefficients.csv`, `tuning_2018_2020.csv`, `best_params.json`, `portfolio_summary.csv`, `portfolio_by_year.csv`, `filing_delay_groups.csv`, `filing_delay_regressions.csv`, `tax_flags_check.py`, and five charts: `roc_curves.png`, `feature_importance.png`, `importance_by_group.png`, `portfolio_returns.png`, `filing_delay.png`.
 
 `cache/` (about 1.1 GB of raw SEC, Yahoo and NY downloads) and `__pycache__/` are **not** uploaded; `.gitignore` leaves them out. The scripts rebuild `cache/` on the first run.
 
@@ -160,7 +217,7 @@ On GitHub the data files are gzipped (`.csv.gz`) to fit the upload limit. pandas
 
 ### Setup
 
-1. `pip install -r requirements.txt` (pandas, requests, scikit-learn, xgboost, matplotlib).
+1. `pip install -r requirements.txt` (pandas, requests, scikit-learn, xgboost, matplotlib, joblib, statsmodels).
 2. Open `config.py` and put your own name and email in `USER_AGENT`. The SEC blocks requests without it.
 
 ### Run
@@ -194,6 +251,10 @@ python pull_abatements.py
 python build_controls.py --cache-dir /path/to/local/cache   # dividend payer, years since first SEC filing
 python build_modeling_table.py                              # joins everything -> data/modeling_table.csv
 python train_models.py                                      # step 6, about 12 minutes -> results/
+python portfolio_test.py                                    # step 7 -> results/portfolio_*
+python filing_delay_test.py                                 # step 8 -> results/filing_delay_*
+python results/tax_flags_check.py                           # step 8 red-flag check (prints results)
+python save_models.py                                       # saves the trained models -> models/*.pkl
 ```
 
 ## Technical details
