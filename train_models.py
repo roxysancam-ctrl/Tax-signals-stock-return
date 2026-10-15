@@ -77,16 +77,20 @@ def log(msg):
 
 
 # ------------------------------------------------------------------ features
-def design_matrix(df, features, kind, fit_rows):
+def design_matrix(df, features, kind, fit_rows, prep=None):
     """Turn raw columns into a numeric matrix.
 
     kind = "tree" or "logit" (picks the ETR version). Medians and scaling come
     from fit_rows only. Returns X and {feature: [matrix columns]} for grouping.
+    If a dict is passed as prep, it is filled with the medians, categories and
+    scaler, so the same steps can be applied to new data (see save_models.py).
     """
+    medians, categories = {}, {}
     cols, groups = {}, {}
     for f in features:
         if f in CATEGORICAL:
             cats = sorted(df[f].dropna().unique())
+            categories[f] = cats
             dummies = [f"{f}={c}" for c in cats]
             for c, name in zip(cats, dummies):
                 cols[name] = (df[f] == c).astype(float)
@@ -98,13 +102,17 @@ def design_matrix(df, features, kind, fit_rows):
         if x[fit_rows].isna().mean() > 0.01:
             cols[f"{f}_blank"] = x.isna().astype(float)
             groups[f].append(f"{f}_blank")
-        cols[f] = x.fillna(x[fit_rows].median())
+        medians[f] = x[fit_rows].median()
+        cols[f] = x.fillna(medians[f])
     X = pd.DataFrame(cols, index=df.index)
     if kind == "logit":
         if "abate_value" in X:
             X["abate_value"] = np.log1p(X["abate_value"])  # dollars: very skewed
         scaler = StandardScaler().fit(X[fit_rows])
         X = pd.DataFrame(scaler.transform(X), index=X.index, columns=X.columns)
+    if prep is not None:
+        prep.update(kind=kind, features=features, columns=list(X.columns), medians=medians,
+                    categories=categories, scaler=scaler if kind == "logit" else None)
     return X, groups
 
 
