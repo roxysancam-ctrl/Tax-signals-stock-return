@@ -208,7 +208,7 @@ def main():
     args = parser.parse_args()
 
     df = build()
-    abatement_cols = [c for c in df.columns if c.startswith("abatement")]
+    abatement_cols = [c for c in df.columns if c.startswith("abate_")]
     df = df[ID_COLUMNS + TARGET_COLUMNS + FEATURE_COLUMNS + abatement_cols]
     df.to_csv(args.out, index=False)
 
