@@ -1,0 +1,38 @@
+{
+  "all/logit": {
+    "C": 0.01
+  },
+  "all/rf": {
+    "min_samples_leaf": 20,
+    "max_depth": 6
+  },
+  "all/ada": {
+    "max_depth": 3,
+    "learning_rate": 0.05,
+    "n_estimators": 300
+  },
+  "all/xgb": {
+    "max_depth": 2,
+    "min_child_weight": 20,
+    "n_estimators": 300,
+    "learning_rate": 0.03
+  },
+  "controls_only/logit": {
+    "C": 1.0
+  },
+  "controls_only/rf": {
+    "min_samples_leaf": 100,
+    "max_depth": 6
+  },
+  "controls_only/ada": {
+    "max_depth": 2,
+    "learning_rate": 0.05,
+    "n_estimators": 300
+  },
+  "controls_only/xgb": {
+    "max_depth": 2,
+    "min_child_weight": 20,
+    "n_estimators": 300,
+    "learning_rate": 0.03
+  }
+}

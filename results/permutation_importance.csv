@@ -1,0 +1,157 @@
+model,model_name,level,feature,category,auc_drop,auc_drop_std
+ada,AdaBoost,feature,roa,Control,0.02932,0.00323
+ada,AdaBoost,feature,log_total_assets,Control,0.00875,0.00067
+ada,AdaBoost,feature,filing_lag_days,Filing,0.00719,0.00072
+ada,AdaBoost,feature,cash_to_book_tax,Tax,0.00599,0.00039
+ada,AdaBoost,feature,net_deferred_tax_to_assets,Tax,0.00181,0.00045
+ada,AdaBoost,feature,pretax_roa,Control,0.00172,0.0004
+ada,AdaBoost,feature,unrecognized_tax_benefits_to_assets,Tax,0.00145,0.00039
+ada,AdaBoost,feature,exchange,Control,0.00063,0.00011
+ada,AdaBoost,feature,cash_etr,Tax,0.00053,0.00037
+ada,AdaBoost,feature,etr,Tax,0.00024,0.00031
+ada,AdaBoost,feature,deferred_share_of_tax,Tax,6e-05,7e-05
+ada,AdaBoost,feature,fye_december,Control,3e-05,3e-05
+ada,AdaBoost,feature,hq_region,Control,2e-05,0.0
+ada,AdaBoost,feature,pretax_loss,Tax,0.0,0.0
+ada,AdaBoost,feature,pretax_tiny,Tax,0.0,0.0
+ada,AdaBoost,feature,pretax_missing,Tax,0.0,0.0
+ada,AdaBoost,feature,abate_any,Abatement,0.0,0.0
+ada,AdaBoost,feature,abate_value,Abatement,0.0,0.0
+ada,AdaBoost,feature,abate_deals,Abatement,0.0,0.0
+ada,AdaBoost,feature,nt_10k,Filing,0.0,0.0
+ada,AdaBoost,feature,nt_10q_count,Filing,0.0,0.0
+ada,AdaBoost,feature,nt_count,Filing,0.0,0.0
+ada,AdaBoost,feature,nt_max_days_late,Filing,0.0,0.0
+ada,AdaBoost,feature,nt_never_filed,Filing,0.0,0.0
+ada,AdaBoost,feature,nt_missed_extension,Filing,0.0,0.0
+ada,AdaBoost,feature,dividend_payer,Control,0.0,0.0
+ada,AdaBoost,feature,size_quintile,Control,-0.0,1e-05
+ada,AdaBoost,feature,abate_to_revenue,Abatement,-1e-05,2e-05
+ada,AdaBoost,feature,filer_status_est,Control,-2e-05,4e-05
+ada,AdaBoost,feature,valuation_allowance_to_assets,Tax,-3e-05,2e-05
+ada,AdaBoost,feature,tenk_filing_lag_days,Filing,-5e-05,0.0001
+ada,AdaBoost,feature,etr_change,Tax,-0.00029,0.0001
+ada,AdaBoost,feature,ff12_industry,Control,-0.00259,0.00027
+ada,AdaBoost,feature,years_since_first_filing,Control,-0.00489,0.00099
+ada,AdaBoost,feature,prior_ret_12m,Control,-0.01433,0.00283
+ada,AdaBoost,category,Tax,Tax,0.01539,0.00219
+ada,AdaBoost,category,Filing,Filing,0.00732,0.00126
+ada,AdaBoost,category,Control,Control,0.0038,0.00298
+ada,AdaBoost,category,Abatement,Abatement,-1e-05,1e-05
+logit,Logit,feature,size_quintile,Control,0.0291,0.00205
+logit,Logit,feature,cash_to_book_tax,Tax,0.01051,0.001
+logit,Logit,feature,pretax_missing,Tax,0.00846,0.00179
+logit,Logit,feature,etr_change,Tax,0.00654,0.00072
+logit,Logit,feature,nt_10k,Filing,0.0058,0.00114
+logit,Logit,feature,exchange,Control,0.00541,0.00081
+logit,Logit,feature,nt_count,Filing,0.00303,0.00049
+logit,Logit,feature,unrecognized_tax_benefits_to_assets,Tax,0.00238,0.00072
+logit,Logit,feature,dividend_payer,Control,0.00193,8e-05
+logit,Logit,feature,pretax_tiny,Tax,0.00104,0.00031
+logit,Logit,feature,valuation_allowance_to_assets,Tax,0.00081,0.00043
+logit,Logit,feature,pretax_loss,Tax,0.00059,5e-05
+logit,Logit,feature,roa,Control,0.00042,0.00042
+logit,Logit,feature,years_since_first_filing,Control,0.0004,4e-05
+logit,Logit,feature,deferred_share_of_tax,Tax,0.00015,0.00019
+logit,Logit,feature,tenk_filing_lag_days,Filing,0.00012,0.00024
+logit,Logit,feature,filing_lag_days,Filing,8e-05,0.00013
+logit,Logit,feature,abate_value,Abatement,8e-05,0.00014
+logit,Logit,feature,abate_any,Abatement,7e-05,0.00022
+logit,Logit,feature,abate_to_revenue,Abatement,-0.0,0.0001
+logit,Logit,feature,nt_never_filed,Filing,-0.0001,0.00017
+logit,Logit,feature,fye_december,Control,-0.00012,0.00027
+logit,Logit,feature,etr,Tax,-0.00022,9e-05
+logit,Logit,feature,cash_etr,Tax,-0.00025,0.0002
+logit,Logit,feature,net_deferred_tax_to_assets,Tax,-0.00029,0.00054
+logit,Logit,feature,pretax_roa,Control,-0.00052,0.00105
+logit,Logit,feature,abate_deals,Abatement,-0.00052,0.00017
+logit,Logit,feature,nt_10q_count,Filing,-0.00059,0.00021
+logit,Logit,feature,nt_missed_extension,Filing,-0.00158,0.00047
+logit,Logit,feature,hq_region,Control,-0.00164,0.00058
+logit,Logit,feature,nt_max_days_late,Filing,-0.00186,0.00057
+logit,Logit,feature,log_total_assets,Control,-0.00264,0.00014
+logit,Logit,feature,ff12_industry,Control,-0.00344,0.00139
+logit,Logit,feature,filer_status_est,Control,-0.006,0.00078
+logit,Logit,feature,prior_ret_12m,Control,-0.01553,0.00204
+logit,Logit,category,Tax,Tax,0.03813,0.00381
+logit,Logit,category,Filing,Filing,0.00346,0.00081
+logit,Logit,category,Abatement,Abatement,-0.00014,0.00016
+logit,Logit,category,Control,Control,-0.00489,0.00289
+rf,Random Forest,feature,log_total_assets,Control,0.00337,0.00068
+rf,Random Forest,feature,roa,Control,0.00282,0.00128
+rf,Random Forest,feature,cash_to_book_tax,Tax,0.0024,0.00023
+rf,Random Forest,feature,cash_etr,Tax,0.00138,0.00074
+rf,Random Forest,feature,filing_lag_days,Filing,0.00127,0.00059
+rf,Random Forest,feature,etr_change,Tax,0.00123,0.00029
+rf,Random Forest,feature,size_quintile,Control,0.00097,0.00032
+rf,Random Forest,feature,tenk_filing_lag_days,Filing,0.00077,0.00022
+rf,Random Forest,feature,exchange,Control,0.00043,0.00033
+rf,Random Forest,feature,net_deferred_tax_to_assets,Tax,0.00037,0.00057
+rf,Random Forest,feature,etr,Tax,0.00022,0.00039
+rf,Random Forest,feature,filer_status_est,Control,0.00018,0.00012
+rf,Random Forest,feature,pretax_roa,Control,0.00016,0.00051
+rf,Random Forest,feature,deferred_share_of_tax,Tax,0.00015,0.0003
+rf,Random Forest,feature,nt_max_days_late,Filing,0.00012,5e-05
+rf,Random Forest,feature,nt_count,Filing,9e-05,2e-05
+rf,Random Forest,feature,nt_10k,Filing,9e-05,3e-05
+rf,Random Forest,feature,valuation_allowance_to_assets,Tax,8e-05,0.00012
+rf,Random Forest,feature,nt_10q_count,Filing,6e-05,1e-05
+rf,Random Forest,feature,pretax_tiny,Tax,3e-05,2e-05
+rf,Random Forest,feature,hq_region,Control,1e-05,6e-05
+rf,Random Forest,feature,nt_never_filed,Filing,0.0,0.0
+rf,Random Forest,feature,abate_to_revenue,Abatement,0.0,1e-05
+rf,Random Forest,feature,abate_value,Abatement,0.0,1e-05
+rf,Random Forest,feature,abate_deals,Abatement,0.0,0.0
+rf,Random Forest,feature,abate_any,Abatement,-0.0,0.0
+rf,Random Forest,feature,fye_december,Control,-3e-05,8e-05
+rf,Random Forest,feature,pretax_loss,Tax,-6e-05,4e-05
+rf,Random Forest,feature,nt_missed_extension,Filing,-8e-05,3e-05
+rf,Random Forest,feature,dividend_payer,Control,-0.0001,6e-05
+rf,Random Forest,feature,pretax_missing,Tax,-0.00037,9e-05
+rf,Random Forest,feature,unrecognized_tax_benefits_to_assets,Tax,-0.00054,0.00036
+rf,Random Forest,feature,ff12_industry,Control,-0.00197,0.00041
+rf,Random Forest,feature,years_since_first_filing,Control,-0.00296,0.00046
+rf,Random Forest,feature,prior_ret_12m,Control,-0.00856,0.00123
+rf,Random Forest,category,Tax,Tax,0.02003,0.00208
+rf,Random Forest,category,Control,Control,0.00709,0.00253
+rf,Random Forest,category,Filing,Filing,0.00301,0.00115
+rf,Random Forest,category,Abatement,Abatement,-0.0,1e-05
+xgb,XGBoost,feature,roa,Control,0.02117,0.00237
+xgb,XGBoost,feature,log_total_assets,Control,0.01486,0.00094
+xgb,XGBoost,feature,cash_to_book_tax,Tax,0.01057,0.00056
+xgb,XGBoost,feature,filing_lag_days,Filing,0.00873,0.00113
+xgb,XGBoost,feature,cash_etr,Tax,0.00337,0.00071
+xgb,XGBoost,feature,pretax_roa,Control,0.00291,0.00045
+xgb,XGBoost,feature,unrecognized_tax_benefits_to_assets,Tax,0.00202,0.0003
+xgb,XGBoost,feature,size_quintile,Control,0.00194,0.00017
+xgb,XGBoost,feature,exchange,Control,0.00182,0.00024
+xgb,XGBoost,feature,net_deferred_tax_to_assets,Tax,0.00149,0.00046
+xgb,XGBoost,feature,deferred_share_of_tax,Tax,0.00072,8e-05
+xgb,XGBoost,feature,etr_change,Tax,0.00069,0.00023
+xgb,XGBoost,feature,nt_10k,Filing,0.00061,7e-05
+xgb,XGBoost,feature,etr,Tax,0.00058,0.00026
+xgb,XGBoost,feature,dividend_payer,Control,0.00038,6e-05
+xgb,XGBoost,feature,nt_max_days_late,Filing,0.00014,1e-05
+xgb,XGBoost,feature,hq_region,Control,0.0001,0.0001
+xgb,XGBoost,feature,pretax_missing,Tax,7e-05,5e-05
+xgb,XGBoost,feature,nt_count,Filing,3e-05,2e-05
+xgb,XGBoost,feature,fye_december,Control,2e-05,2e-05
+xgb,XGBoost,feature,pretax_tiny,Tax,0.0,0.0
+xgb,XGBoost,feature,abate_any,Abatement,0.0,0.0
+xgb,XGBoost,feature,abate_value,Abatement,0.0,0.0
+xgb,XGBoost,feature,abate_to_revenue,Abatement,0.0,0.0
+xgb,XGBoost,feature,abate_deals,Abatement,0.0,0.0
+xgb,XGBoost,feature,nt_never_filed,Filing,0.0,0.0
+xgb,XGBoost,feature,tenk_filing_lag_days,Filing,-0.0,0.00029
+xgb,XGBoost,feature,nt_10q_count,Filing,-0.0,0.0
+xgb,XGBoost,feature,pretax_loss,Tax,-1e-05,0.0
+xgb,XGBoost,feature,nt_missed_extension,Filing,-4e-05,0.0
+xgb,XGBoost,feature,valuation_allowance_to_assets,Tax,-0.00014,6e-05
+xgb,XGBoost,feature,filer_status_est,Control,-0.00033,7e-05
+xgb,XGBoost,feature,ff12_industry,Control,-0.00281,0.00035
+xgb,XGBoost,feature,years_since_first_filing,Control,-0.00467,0.00086
+xgb,XGBoost,feature,prior_ret_12m,Control,-0.01808,0.00272
+xgb,XGBoost,category,Tax,Tax,0.02769,0.00176
+xgb,XGBoost,category,Filing,Filing,0.00905,0.00175
+xgb,XGBoost,category,Abatement,Abatement,0.0,0.0
+xgb,XGBoost,category,Control,Control,-0.00108,0.00372
