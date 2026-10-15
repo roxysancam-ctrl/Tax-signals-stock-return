@@ -1,0 +1,7 @@
+outcome,model,delay_measure,n,coef,ci_low,ci_high,p_value,holds_constant,odds_ratio
+loss_now,logit,delay_10d,35684,0.08376,0.05191,0.11561,0.0,delay_10d + log_total_assets + C(ff12_industry) + C(fiscal_year),1.08737
+loss_next,logit,delay_10d,34799,0.06923,0.04351,0.09495,0.0,delay_10d + loss_now + roa + log_total_assets + C(ff12_industry) + C(fiscal_year),1.07168
+beat_sp500,logit,delay_10d,35301,-0.03943,-0.05722,-0.02163,1e-05,delay_10d + loss_now + roa + log_total_assets + C(ff12_industry) + C(fiscal_year),0.96134
+excess_ret_12m,ols,delay_10d,35301,-0.01036,-0.01914,-0.00158,0.0208,delay_10d + loss_now + roa + log_total_assets + C(ff12_industry) + C(fiscal_year),
+loss_next,logit,after_deadline,34799,0.39146,0.27895,0.50397,0.0,after_deadline + loss_now + roa + log_total_assets + C(ff12_industry) + C(fiscal_year),1.47914
+excess_ret_12m,ols,after_deadline,35301,-0.09619,-0.1335,-0.05888,0.0,after_deadline + loss_now + roa + log_total_assets + C(ff12_industry) + C(fiscal_year),

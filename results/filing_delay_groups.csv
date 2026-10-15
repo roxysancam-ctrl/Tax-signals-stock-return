@@ -1,0 +1,5 @@
+delay_group,company_years,share_loss_now,share_loss_next_year,median_roa,avg_excess_return,median_excess_return,share_beat_sp500,share_loss_now_size_q1,share_loss_now_size_q5
+Early (8+ days before deadline),15426,0.3026,0.3009,0.0203,-0.0122,-0.0811,0.4026,0.7517,0.0941
+Last week before deadline,20635,0.3172,0.3241,0.0124,-0.0295,-0.1033,0.3859,0.7879,0.1069
+"Late, within NT extension",3498,0.6658,0.6722,-0.2356,-0.1341,-0.3327,0.2773,0.854,0.2778
+Very late (past extension),1465,0.7422,0.7447,-0.3632,-0.0438,-0.3559,0.3099,0.8813,0.3846
