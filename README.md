@@ -1,4 +1,3 @@
-# Tax-signals-stock-return
 # Do Tax Signals Predict Stock Returns?
 
 **Question:** Using a company's tax data, tax abatements and filing behavior, can we predict whether its stock will beat the S&P 500 over the next 12 months?
@@ -222,4 +221,3 @@ Control limits:
 - **Coverage.** The full run (13 Oct 2026) covered 8,028 listed companies; 5,006 have US-GAAP tax data (most of the rest are foreign filers using IFRS).
 - **XBRL coverage** is thin before about 2010, and some small companies use custom tags, which leaves some fields blank.
 - **Big 4 auditor** isn't pulled. The `dei:AuditorName` tag only exists from 2021, so earlier years need another source, such as Audit Analytics or the PCAOB Form AP data.
-
