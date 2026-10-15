@@ -18,7 +18,7 @@ This is a solo portfolio project that follows a group capstone on credit card ch
 | 3 | Stock returns and the target | Done |
 | 4 | Tax abatements (NY IDA) | Done |
 | 5 | Controls and the modeling table | Done |
-| 6 | Train the four models, feature importance | In progress |
+| 6 | Train the four models, feature importance | Done |
 | 7 | Portfolio test vs the S&P 500 | Next |
 
 ## The project step by step
@@ -71,9 +71,23 @@ Then everything is joined on `cik` + `fiscal_year` and cleaned:
 
 Result: `data/modeling_table.csv`, 43,668 company-years for 4,522 companies.
 
-### Step 6. Models and feature importance (in progress)
+### Step 6. Models and feature importance (`train_models.py`)
 
-Train Logit, Random Forest, AdaBoost and XGBoost on 2012-2020 and score them on 2021-2024 (AUC, plus accuracy, precision and recall). Permutation importance shows which features the models lean on. Beating the market is hard, so an AUC of 0.55-0.60 on the test years would count as a real signal. A controls-only model is the baseline the tax features have to beat.
+Logit, Random Forest, AdaBoost and XGBoost were trained on fiscal 2012-2020 and scored once on 2021-2024. Their settings were tuned by fitting on 2012-2017 and scoring on 2018-2020. Each model was also trained on the controls only, as the baseline the tax signals have to beat. Permutation importance (shuffle a feature, measure the drop in test AUC) shows which signals the models lean on. Full write-up: [results/RESULTS.md](results/RESULTS.md).
+
+| Model | Test AUC | Controls only | Top 10% picks that beat |
+|---|---|---|---|
+| **Random Forest** | **0.564** | 0.557 | 36.0% |
+| AdaBoost | 0.545 | 0.544 | 34.5% |
+| Logit | 0.544 | 0.540 | 36.9% |
+| XGBoost | 0.542 | 0.542 | 34.2% |
+
+(33.9% of test stocks beat the index.)
+
+- All four beat a coin flip, and Random Forest reaches the 0.55-0.60 range that counts as good here. Unlike the churn capstone, XGBoost did not win: with this little signal its extra flexibility fits noise.
+- **Tax signals are the group the models use most**, especially cash taxes paid vs tax expense, change in ETR and cash ETR. Filing speed matters more than the NT notices themselves. Abatements add nothing; there are too few (348 company-years) to tell.
+- **The honest headline:** a controls-only model does almost as well. Only Random Forest's gain from the tax and filing signals (+0.006 AUC) is clearly above zero. Tax figures overlap with size and profitability.
+- Last year's return hurt in the test years: momentum from 2012-2020 flipped in 2021-2024.
 
 ### Step 7. Portfolio test (next)
 
@@ -105,9 +119,10 @@ Each test year, buy the top 10-20% of stocks the best model ranks highest and co
 | `pull_abatements.py` | Step 4 | `data/abatements_company_year.csv`, `data/abatement_name_matches.csv`, `data/abatement_matched_deals.csv` |
 | `build_controls.py` | Step 5 (dividends, years filing) | `data/controls_company_year.csv` |
 | `build_modeling_table.py` | Step 5 (join + clean) | `data/modeling_table.csv` |
+| `train_models.py` | Step 6 (four models, controls-only baseline, importance, charts) | `results/`, `data/test_predictions.csv` |
 | `requirements.txt` | Python packages | |
 
-### Data (`data/`, about 51 MB)
+### Data (`data/`, about 56 MB)
 
 | File | One row per | Rows | Columns |
 |---|---|---|---|
@@ -120,7 +135,14 @@ Each test year, buy the top 10-20% of stocks the best model ranks highest and co
 | `abatement_name_matches.csv` | recipient name | 10,242 | 6 |
 | `abatement_matched_deals.csv` | matched IDA deal | 750 | 11 |
 | `controls_company_year.csv` | company-year | 56,340 | 5 |
-| `modeling_table.csv` | company-year (final) | 43,668 | 54 |
+| `modeling_table.csv` | company-year (final) | 43,668 | 60 |
+| `test_predictions.csv` | test company-year, each model's probability | 17,008 | |
+
+On GitHub the data files are gzipped (`.csv.gz`) to fit the upload limit. pandas reads them directly (`pd.read_csv("data/modeling_table.csv.gz")`); to re-run the scripts, unzip them first so the names end in `.csv`.
+
+### Results (`results/`)
+
+`RESULTS.md` (summary), `model_metrics.csv`, `auc_by_test_year.csv`, `permutation_importance.csv`, `logit_coefficients.csv`, `tuning_2018_2020.csv`, `best_params.json`, and three charts: `roc_curves.png`, `feature_importance.png`, `importance_by_group.png`.
 
 `cache/` (about 1.1 GB of raw SEC, Yahoo and NY downloads) and `__pycache__/` are **not** uploaded; `.gitignore` leaves them out. The scripts rebuild `cache/` on the first run.
 
@@ -138,7 +160,7 @@ Each test year, buy the top 10-20% of stocks the best model ranks highest and co
 
 ### Setup
 
-1. `pip install -r requirements.txt` (pandas and requests; the modeling step also needs scikit-learn and xgboost).
+1. `pip install -r requirements.txt` (pandas, requests, scikit-learn, xgboost, matplotlib).
 2. Open `config.py` and put your own name and email in `USER_AGENT`. The SEC blocks requests without it.
 
 ### Run
@@ -171,6 +193,7 @@ python pull_abatements.py
 # copy the cache to a local disk first (reading it from a network folder is very slow)
 python build_controls.py --cache-dir /path/to/local/cache   # dividend payer, years since first SEC filing
 python build_modeling_table.py                              # joins everything -> data/modeling_table.csv
+python train_models.py                                      # step 6, about 12 minutes -> results/
 ```
 
 ## Technical details

@@ -1,3 +1,7 @@
 pandas>=2.0
 requests>=2.28
 # yfinance not needed: pull_returns.py calls Yahoo directly
+# step 6 (train_models.py)
+scikit-learn>=1.4
+xgboost>=2.0
+matplotlib>=3.7
