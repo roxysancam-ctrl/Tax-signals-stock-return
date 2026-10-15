@@ -17,7 +17,11 @@ The clearest result is about the **10-K filing date**: companies that file their
 - It is not just small companies: among the largest fifth of companies, **39%** of very late filers lost money vs **9%** of early filers.
 - Holding size, industry, year, this year's loss and ROA constant, filing past the deadline raises the odds of a loss **next year by 48%**, and goes with a stock return **9.6 points lower** vs the S&P 500 over the next 12 months.
 
+![Loss rate and stock returns by how late the 10-K was filed](results/filing_delay.png)
+
 This is correlation, not cause: late filing is usually a symptom of accounting or business trouble, not its source. Details in [step 8](#step-8-slow-filers-and-red-flags-filing_delay_testpy).
+
+**Quick tour:** [`notebooks/walkthrough.ipynb`](notebooks/walkthrough.ipynb) walks through the whole project with tables and charts. GitHub shows it with all outputs, so you don't need to run anything.
 
 ## Status (15 Oct 2026)
 
@@ -95,6 +99,10 @@ Logit, Random Forest, AdaBoost and XGBoost were trained on fiscal 2012-2020 and 
 
 (33.9% of test stocks beat the index.)
 
+![ROC curves of the four models on the test years](results/roc_curves.png)
+
+![Drop in test AUC when each group of features is shuffled](results/importance_by_group.png)
+
 - All four beat a coin flip, and Random Forest reaches the 0.55-0.60 range that counts as good here. Unlike the churn capstone, XGBoost did not win: with this little signal its extra flexibility fits noise.
 - **Tax signals are the group the models use most**, especially cash taxes paid vs tax expense, change in ETR and cash ETR. Filing speed matters more than the NT notices themselves. Abatements add nothing; there are too few (348 company-years) to tell.
 - **The honest headline:** a controls-only model does almost as well. Only Random Forest's gain from the tax and filing signals (+0.006 AUC) is clearly above zero. Tax figures overlap with size and profitability.
@@ -115,6 +123,8 @@ Each test year, rank stocks by Random Forest's probability of beating the S&P 50
 - **The top picks never beat the S&P 500.** In 2021-2024 a handful of mega-caps carried the index, and the typical stock trailed it by about 10% a year.
 - **The model is much better at spotting losers than winners.** The top 10% beat the average stock by about 2.4 points a year; the bottom 10% trailed it by about 20. It works better for avoiding stocks than for picking them.
 - **Tax and filing signals add about 0.9 points a year** over the controls-only model, well within the noise.
+
+![Portfolio returns vs the S&P 500 by test year](results/portfolio_returns.png)
 
 ### Step 8. Slow filers and red flags (`filing_delay_test.py`)
 
@@ -173,6 +183,7 @@ The broader prediction model is more modest. The models use tax signals more tha
 | `filing_delay_test.py` | Step 8 (filing delay vs losses and returns) | `results/filing_delay_groups.csv`, `filing_delay_regressions.csv`, `filing_delay.png` |
 | `results/tax_flags_check.py` | Step 8 one-off check: tax + filing only model, red-flag returns | prints to screen |
 | `save_models.py` | Saves the four trained models, with their blank-filling and scaling steps | `models/logit.pkl`, `rf.pkl`, `ada.pkl`, `xgb.pkl` |
+| `notebooks/walkthrough.ipynb` | The whole project in one notebook: data, key finding, models, portfolio, a saved model in use. Reads finished files only; runs in seconds | |
 | `requirements.txt` | Python packages | |
 
 ### Data (`data/`, about 56 MB)

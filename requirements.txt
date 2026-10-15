@@ -8,3 +8,5 @@ matplotlib>=3.7
 joblib>=1.3
 # step 8 (filing_delay_test.py)
 statsmodels>=0.14
+# notebooks/walkthrough.ipynb
+jupyter
